@@ -29,7 +29,7 @@
   "Verified_Role": "1521337604291825774",
   "admin_role": ["id", "id"],
   "moderator_role": ["id", "id"],
-  "temp_de_vie_du_lien": "30",
+  "LifeTimeLink": "30",
   "Allow_Vpn_Proxy": false,
   "Allow_Alt": false,
   "Allow_Ip_Already_Linked": false,
