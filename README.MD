@@ -1,49 +1,102 @@
-## Syntra v1.2.0 — Security & Quality-of-Life Update
+# Verify Bot
 
-**Released:** July 4, 2026
-
-This update focuses primarily on security. Several vulnerabilities present in v1.0.0 have been identified and resolved. Details are intentionally kept private to protect existing installations that have not yet updated. **We strongly recommend updating immediately.**
+Advanced Discord verification bot with a web admin panel, anti-bot protection, anti-VPN/proxy detection, geo-blocking, and automatic sanction system.
 
 ---
 
-### Security
+## Features
 
-- Fixed several security vulnerabilities identified since v1.0.0 (details withheld for safety)
-- Passwords are now hashed using scrypt before being stored — plain text passwords no longer exist in the database. Existing accounts are migrated automatically on first login
-- Replaced the old account-ID cookie with a proper session token system — the token is random, stored in an `httpOnly` cookie, and expires automatically
-- Removed the internal storage path from public profiles and the user API — it was leaking server-side folder structure to anyone who called the endpoint
+- **Verification system** via a unique, time-limited web link (`temp_de_vie_du_lien`)
+- **Multi-provider CAPTCHA**: Google reCAPTCHA v2, Cloudflare Turnstile, hCaptcha — with automatic fallback to a local CAPTCHA if keys are missing or invalid
+- **Advanced detection**:
+  - Alternate accounts (multi-accounting)
+  - IP addresses already linked to another account
+  - VPN / Proxy
+  - Automated bots
+- **Configurable automatic sanctions** (`Kicked` or `Banned`) for each detection type
+- **Geo-blocking** by ISO 3166-1 alpha-2 country code (`CountryBlocked.json`)
+- **Web admin panel** (`/settings`, `/dashboard`):
+  - User session management (disconnect, configurable expiration)
+  - Self-service account deletion
+  - Forced session reset by an admin
+- **Discord webhooks** for logs, verification successes, and verification failures
+- **Configurable roles**: unverified role, verified role, admin/moderator roles
 
-### Session Management
+## Requirements
 
-- Sessions now expire automatically after a configurable duration (default: 1 hour, adjustable by admins in the admin panel under **Controls > Session Duration**)
-- Users can now disconnect all of their own active sessions from their profile settings page (`/dashboard`)
-- Users can now permanently delete their own account from the same page
-- Admins can force-reset any user's sessions from the **Users** tab, from a profile page's Admin Actions section, or from the `...` menu on any of their posts or comments
+- [Node.js](https://nodejs.org/) 18 or higher
+- A Discord bot (token, required intents enabled)
+- (Optional) CAPTCHA keys: reCAPTCHA, Turnstile, or hCaptcha
 
-### CAPTCHA
+## Installation
 
-- Added support for **Cloudflare Turnstile**, **hCaptcha**, and **Google reCAPTCHA v2** as alternative CAPTCHA providers
-- If keys are missing or invalid, Syntra automatically falls back to the built-in local CAPTCHA — no downtime or manual intervention required
-- The active provider can be switched at any time from the admin panel under **Controls > Captcha Provider**
+```bash
+# 1. Clone the repository
+git clone https://github.com/your-org/verify-bot.git
+cd verify-bot
 
-### Admin Panel
+# 2. Install dependencies
+npm install
 
-- The admin panel now remembers which tab you were on after performing an action, instead of always resetting to the first tab
+# 3. Configure environment variables
+cp key_env.example key.env
+# Then edit key.env with your real values
 
-### Other
+# 4. Start the bot
+npm start
+```
 
-- General performance improvements and internal code cleanup
+## Configuration
 
----
+### `key.env`
+Contains **only** secrets (never committed, see `.gitignore`):
 
-### Upgrading from v1.0.0
+| Variable | Description |
+|---|---|
+| `DISCORD_TOKEN` | Discord bot token |
+| `RECAPTCHA_SITE_KEY` / `RECAPTCHA_SECRET_KEY` | Google reCAPTCHA keys |
+| `WEBHOOK_SUCCESS_VERIFY` / `WEBHOOK_ERROR_VERIFY` / `WEBHOOK_LOGS` | Discord webhooks |
+| `JWT_SECRET` | Random string, 32+ characters |
+| `ENCRYPTION_KEY` | Exactly 64 hexadecimal characters (32 bytes) |
+| `NODE_ENV`, `PORT`, `HOST`, `ALLOWED_DOMAINS` | Server settings |
 
-1. Pull or download the latest files
-2. Run `npm install` to update dependencies
-3. Restart the server with `npm start`
+Generate an encryption key:
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
 
-No manual database migration is required. Password hashing is applied automatically when users log in for the first time after the update.
+### `settings.json`
+General non-sensitive configuration: command prefix, enabling verification/CAPTCHA/logs, roles, Discord links, session duration, max verification attempts, log retention, etc. See the `_readme` comments in the file for details on each field.
 
----
+### `sanction.json`
+Defines the sanction (`Kicked` or `Banned`) applied for each type of verification failure (alt detected, IP already linked, VPN/proxy, bot detected).
 
-**Full changelog:** [updates.json](./updates.json)
+### `CountryBlocked.json`
+List of country codes (ISO 3166-1 alpha-2) blocked from verification.
+
+> Secrets go **only** in `key.env`. Webhooks and role IDs go in `settings.json`.
+
+## Usage
+
+- `+SendPanel` - send the verification panel in a channel (moderator)
+- `/verify` - manually verify a member (moderator)
+- `/docs` - show help (moderator)
+- Web panel `/settings` - full configuration (admin only)
+- Web panel `/dashboard` - manage your own account (user)
+
+## Security
+
+See [`SECURITY.md`](./SECURITY.md) for the security policy and vulnerability reporting procedure.
+
+## Changelog / Releases
+
+See [`RELEASE.md`](./RELEASE.md) for version history.
+
+## License
+
+Distributed under the **Creative Commons Attribution-NonCommercial 4.0 International** license - see [`LICENCE`](./LICENCE).
+
+## Support
+
+- Website: [misterfanatic.xyz](https://misterfanatic.xyz)
+- Discord server: open a private ticket
