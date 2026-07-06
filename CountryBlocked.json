@@ -1,0 +1,8 @@
+{
+  "_readme": {
+    "description": "List of ISO 3166-1 alpha-2 country codes that are blocked from completing verification.",
+    "format": "Two-letter uppercase country codes only. Example: 'RU' for Russia, 'CN' for China.",
+    "blocked": "Add or remove country codes from this array to manage access restrictions."
+  },
+  "blocked": ["RU", "CN", "KP", "IR", "BY", "CU", "SY", "VE", "MM"]
+}

@@ -1,0 +1,14 @@
+{
+  "_readme": {
+    "description": "Defines the automatic sanction applied to users who fail specific verification checks.",
+    "valid_values": ["Kicked", "Banned"],
+    "Alt_Detect": "Sanction applied when a secondary/alternate account is detected.",
+    "Ip_Already_Linked": "Sanction applied when the IP address is already linked to another account.",
+    "Vpn_Proxy_Detected": "Sanction applied when a VPN or proxy connection is detected.",
+    "Bot_Detected": "Sanction applied when the account is identified as a bot."
+  },
+  "Alt_Detect": "Kicked",
+  "Ip_Already_Linked": "Kicked",
+  "Vpn_Proxy_Detected": "Kicked",
+  "Bot_Detected": "Kicked"
+}

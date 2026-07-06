@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Documentation</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #c0c0c0;
+  font-family: "Tahoma", "MS Sans Serif", Arial, sans-serif;
+  font-size: 13px;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.window {
+  background: #d4d0c8;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  width: 900px;
+  max-width: 100%;
+  box-shadow: 3px 3px 8px rgba(0,0,0,0.35);
+  margin-bottom: 20px;
+}
+.titlebar {
+  background: linear-gradient(to right, #000080, #1084d0);
+  color: #ffffff;
+  padding: 6px 10px;
+  font-weight: bold;
+  font-size: 13px;
+  letter-spacing: 0.2px;
+}
+.content { padding: 18px; }
+h1 { font-size: 19px; margin-bottom: 6px; color: #000080; }
+h2 {
+  font-size: 14px;
+  margin: 18px 0 10px;
+  color: #000080;
+  border-bottom: 1px solid #808080;
+  padding-bottom: 4px;
+}
+h3 { font-size: 12px; margin: 14px 0 6px; }
+p { line-height: 1.65; margin-bottom: 10px; }
+.info-box {
+  background: #ffffff;
+  border: 1px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  line-height: 1.65;
+  font-size: 12px;
+}
+.warn { border-left: 3px solid #cc0000; }
+.ok { border-left: 3px solid #1a6e1a; }
+.tip { border-left: 3px solid #000080; }
+code, .mono {
+  font-family: "Consolas", "Courier New", monospace;
+  background: #ffffff;
+  border: 1px solid #808080;
+  padding: 1px 5px;
+  font-size: 12px;
+}
+pre {
+  background: #000000;
+  color: #d0d0d0;
+  border: 1px solid #808080;
+  padding: 10px;
+  font-family: "Consolas", "Courier New", monospace;
+  font-size: 12px;
+  overflow-x: auto;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 14px;
+  font-size: 12px;
+  background: #ffffff;
+}
+th, td {
+  border: 1px solid #808080;
+  padding: 6px 8px;
+  text-align: left;
+  vertical-align: top;
+}
+th { background: #000080; color: #ffffff; }
+ul, ol { margin: 0 0 12px 20px; line-height: 1.65; }
+.section-nav {
+  background: #ffffff;
+  border: 1px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+  padding: 10px 14px;
+  margin-bottom: 4px;
+  font-size: 12px;
+  columns: 2;
+}
+.section-nav a { color: #000080; display: block; padding: 2px 0; break-inside: avoid; }
+.footer { text-align: center; font-size: 11px; color: #555555; margin-top: 4px; }
+.badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 1px 6px;
+  border: 1px solid #000080;
+  color: #000080;
+  margin-left: 6px;
+}
+</style>
+</head>
+<body>
+
+<div class="window">
+  <div class="titlebar">Documentation &mdash; Verification Bot</div>
+  <div class="content">
+    <h1>Verification Bot &mdash; Full Configuration Guide</h1>
+    <p>This page is the single source of documentation for the project. It explains every configuration file, every option inside it, every command, and how to set the bot up from a blank server.</p>
+    <div class="section-nav">
+      <a href="#commands">1. Commands</a>
+      <a href="#settings">2. settings.json — General</a>
+      <a href="#security">3. settings.json — Security</a>
+      <a href="#appearance">4. settings.json — Site Appearance</a>
+      <a href="#env">5. key.env</a>
+      <a href="#sanction">6. sanction.json</a>
+      <a href="#database">7. Database files</a>
+      <a href="#captcha">8. Captcha system</a>
+      <a href="#vpn">9. Anti-VPN / Anti-Proxy</a>
+      <a href="#browser">10. Browser blocking</a>
+      <a href="#ratelimit">11. Rate limiting</a>
+      <a href="#routes">12. Web routes</a>
+      <a href="#structure">13. Folder structure</a>
+      <a href="#hardening">14. Security hardening notes</a>
+      <a href="#setup">15. Step-by-step setup</a>
+      <a href="#faq">16. Troubleshooting</a>
+    </div>
+  </div>
+</div>
+
+<div class="window" id="commands">
+  <div class="titlebar">1. Commands</div>
+  <div class="content">
+    <p>All commands use the configured prefix (default <code>+</code>), not a slash. If your prefix is <code>+</code>, commands look like <code>+docs</code>, not <code>/docs</code>.</p>
+    <table>
+      <tr><th>Default word</th><th>Permission</th><th>Description</th></tr>
+      <tr><td><code>+sendpanel</code></td><td>Admin or Moderator</td><td>Sends the verification panel with the Verify button in the current channel.</td></tr>
+      <tr><td><code>+verify @user &lt;reason&gt;</code></td><td>Admin or Moderator</td><td>Manually verifies a user, assigns the verified role, and logs the action.</td></tr>
+      <tr><td><code>+getinfo @user</code></td><td>Admin or Moderator</td><td>Shows the IP address currently linked to that Discord account, plus its recent verification attempts.</td></tr>
+      <tr><td><code>+getinfo &lt;id&gt;</code></td><td>Admin or Moderator</td><td>Same as above, using a raw Discord user ID instead of a mention.</td></tr>
+      <tr><td><code>+getinfo &lt;ip&gt;</code></td><td>Admin or Moderator</td><td>Shows which account currently owns that IP, and every account that has ever attempted verification from it, with Accepted/Refused status and the reason for each attempt.</td></tr>
+      <tr><td><code>+docs</code></td><td>Admin or Moderator</td><td>Shows this list of commands directly in Discord.</td></tr>
+      <tr><td><code>+settings</code></td><td>Admin</td><td>Sends a private, single-use link to the web settings panel via DM.</td></tr>
+    </table>
+
+    <h3>Renaming a command word</h3>
+    <p>You can change the word typed after the prefix for each command without touching any code, using the <code>commands</code> section of <code>settings.json</code>, or directly from the <strong>Commands</strong> section of the web settings panel:</p>
+    <pre>"commands": {
+  "sendpanel": "panel",
+  "verify": "verify",
+  "docs": "help",
+  "settings": "config",
+  "getinfo": "lookup"
+}</pre>
+    <p>With the example above and prefix <code>+</code>, moderators would type <code>+panel</code>, <code>+help</code>, and <code>+lookup</code>. The keys on the left must stay exactly as shown (<code>sendpanel</code>, <code>verify</code>, <code>docs</code>, <code>settings</code>, <code>getinfo</code>) — only the values on the right can be changed.</p>
+
+    <h3>getinfo output example</h3>
+    <pre>+getinfo @Someone
+&gt; Discord Account: 123456789012345678
+&gt; Currently Linked IP: 203.0.113.42
+&gt; Recent Attempts:
+&gt;   203.0.113.42 — ✅ Accepted — Verified successfully
+&gt;   198.51.100.7 — ❌ Refused — Alternate account detected
+
++getinfo 203.0.113.42
+&gt; IP Address: 203.0.113.42
+&gt; Currently Linked Account: 123456789012345678
+&gt; Attempt History:
+&gt;   @Someone (123456789012345678) — ✅ Accepted — Verified successfully
+&gt;   @AltAccount (998877665544332211) — ❌ Refused — IP already linked to account: 123456789012345678</pre>
+
+    <div class="info-box ok">If a user clicks the Verify button in the panel and already has the Verified role, the bot replies "You are already verified" instead of generating a new link.</div>
+  </div>
+</div>
+
+<div class="window" id="settings">
+  <div class="titlebar">2. settings.json &mdash; General</div>
+  <div class="content">
+    <p>Every option below can be changed either by editing <code>settings.json</code> directly, or from the web panel opened with <code>+settings</code>. The file is validated on every startup and every save — invalid values are rejected with a clear error message instead of silently breaking the bot.</p>
+    <table>
+      <tr><th>Key</th><th>Type</th><th>Description</th></tr>
+      <tr><td><code>prefix</code></td><td>string</td><td>The command prefix, e.g. <code>+</code>.</td></tr>
+      <tr><td><code>commands</code></td><td>object</td><td>Renames the word typed after the prefix for each command. See section 1.</td></tr>
+      <tr><td><code>local</code></td><td>boolean</td><td>If true, every generated link (verification links, settings panel links) always points to <code>http://localhost:&lt;port&gt;</code> and the public domain reachability check is skipped entirely — no network call is made to test it. Use this while developing locally. Set to false to use your real domain.</td></tr>
+      <tr><td><code>public_domain</code></td><td>string</td><td>Your public domain (e.g. <code>verify.example.com</code>). Only read when <code>local</code> is false. If it cannot be reached, links fall back automatically to <code>http://localhost:&lt;port&gt;</code>.</td></tr>
+      <tr><td><code>verification_enabled</code></td><td>boolean</td><td>Turns the whole verification flow on or off.</td></tr>
+      <tr><td><code>Enable</code></td><td>boolean</td><td>Master switch. If false, all roles (verified and unverified) are stripped from every member and the system stops responding.</td></tr>
+      <tr><td><code>logs_enabled</code></td><td>boolean</td><td>Turns logging to <code>Logs_Verify_Webbhook</code> on or off.</td></tr>
+      <tr><td><code>NotVerified_Role</code></td><td>string</td><td>Role ID given to members before they verify.</td></tr>
+      <tr><td><code>Verified_Role</code></td><td>string</td><td>Role ID given to members after they verify.</td></tr>
+      <tr><td><code>admin_role</code></td><td>array</td><td>Role IDs with full administrative access, including <code>+settings</code>.</td></tr>
+      <tr><td><code>moderator_role</code></td><td>array</td><td>Role IDs with access to <code>+verify</code>, <code>+docs</code>, <code>+getinfo</code>, and <code>+sendpanel</code>.</td></tr>
+      <tr><td><code>verification_code_expiry</code></td><td>number</td><td>Milliseconds a verification link stays valid. Default 1800000 (30 minutes).</td></tr>
+      <tr><td><code>Discord_Server_Link</code></td><td>string</td><td>Invite link shown on the verification page and used as a fallback destination.</td></tr>
+      <tr><td><code>Discord_Channel_Link</code></td><td>string</td><td>Channel link used for the post-verification redirect.</td></tr>
+      <tr><td><code>Privacy_Policy_Link</code></td><td>string</td><td>URL to your Privacy Policy. Shown as a link on the verification and landing pages, and in the panel embed. Leave empty to hide the link everywhere.</td></tr>
+      <tr><td><code>Terms_Of_Service_Link</code></td><td>string</td><td>URL to your Terms of Service. Shown alongside the Privacy Policy link. Leave empty to hide the link everywhere.</td></tr>
+      <tr><td><code>Success_Verify_Webhook</code></td><td>string</td><td>Discord webhook URL called on a successful verification.</td></tr>
+      <tr><td><code>Error_Verify_Webhook</code></td><td>string</td><td>Discord webhook URL called when a verification attempt is blocked or fails.</td></tr>
+      <tr><td><code>Logs_Verify_Webbhook</code></td><td>string</td><td>Discord webhook URL used for general command and moderation logs.</td></tr>
+    </table>
+    <div class="info-box warn">Never put the Discord bot token or captcha secret keys in this file. Those belong only in <code>key.env</code>, which is not committed to version control.</div>
+  </div>
+</div>
+
+<div class="window" id="security">
+  <div class="titlebar">3. settings.json &mdash; Security</div>
+  <div class="content">
+    <table>
+      <tr><th>Key</th><th>Type</th><th>Description</th></tr>
+      <tr><td><code>Allow_Vpn_Proxy</code></td><td>boolean</td><td>If true, VPN/proxy/hosting connections are allowed to verify. Default: false.</td></tr>
+      <tr><td><code>Vpn_Check_Fail_Closed</code></td><td>boolean</td><td>What to do if the VPN/proxy reputation lookup itself fails or times out. <code>true</code> = treat as a detected proxy (safer, fails closed). <code>false</code> = treat as clean (more lenient, fails open). Default: false.</td></tr>
+      <tr><td><code>Vpn_Check_Timeout_Ms</code></td><td>number</td><td>Timeout for the VPN/proxy lookup, in milliseconds. Default: 4000.</td></tr>
+      <tr><td><code>Allow_Alt</code></td><td>boolean</td><td>If true, accounts flagged as alternate accounts are allowed to verify.</td></tr>
+      <tr><td><code>Allow_Ip_Already_Linked</code></td><td>boolean</td><td>If true, an IP already linked to another account is allowed to verify again.</td></tr>
+      <tr><td><code>BlockingUnknownNavigator</code></td><td>boolean</td><td>If true, only browsers listed in <code>Authorised_Navigators</code> may complete verification. See section 10.</td></tr>
+      <tr><td><code>Authorised_Navigators</code></td><td>array</td><td>Browser names allowed when <code>BlockingUnknownNavigator</code> is true.</td></tr>
+      <tr><td><code>blocked_countries</code></td><td>array</td><td>ISO 3166-1 alpha-2 country codes blocked from verifying. This replaces the old separate <code>CountryBlocked.json</code> file — everything now lives in <code>settings.json</code>.</td></tr>
+      <tr><td><code>rate_limit</code></td><td>object</td><td>Anti-spam thresholds. See section 11.</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="window" id="appearance">
+  <div class="titlebar">4. settings.json &mdash; Site Appearance</div>
+  <div class="content">
+    <p>The entire look of the verification website is controlled by the <code>site</code> object — no code changes needed to rebrand it:</p>
+    <pre>"site": {
+  "brand_name": "Security Verification",
+  "footer_text": "Secured by the verification system",
+  "background_color": "#c0c0c0",
+  "window_color": "#d4d0c8",
+  "titlebar_gradient_start": "#000080",
+  "titlebar_gradient_end": "#1084d0",
+  "success_color": "#1a6e1a",
+  "error_color": "#8b0000"
+}</pre>
+    <table>
+      <tr><th>Key</th><th>Description</th></tr>
+      <tr><td><code>brand_name</code></td><td>Text shown in the window title bar of every page.</td></tr>
+      <tr><td><code>footer_text</code></td><td>Text shown at the bottom of every page.</td></tr>
+      <tr><td><code>background_color</code></td><td>Page background, behind the window.</td></tr>
+      <tr><td><code>window_color</code></td><td>Main window background color.</td></tr>
+      <tr><td><code>titlebar_gradient_start</code> / <code>titlebar_gradient_end</code></td><td>Left-to-right gradient colors of the title bar.</td></tr>
+      <tr><td><code>success_color</code></td><td>Color used for success messages and the "VERIFIED" badge.</td></tr>
+      <tr><td><code>error_color</code></td><td>Color used for error messages and the "BLOCKED" badge.</td></tr>
+    </table>
+    <p>All of these are editable from the <strong>Site Appearance</strong> section of the web settings panel using color pickers — no need to know hex codes.</p>
+  </div>
+</div>
+
+<div class="window" id="env">
+  <div class="titlebar">5. key.env</div>
+  <div class="content">
+    <p>Holds every secret the bot needs. Copy <code>key.env.example</code> to <code>key.env</code> and fill in real values.</p>
+    <table>
+      <tr><th>Key</th><th>Required when</th></tr>
+      <tr><td><code>DISCORD_TOKEN</code></td><td>Always.</td></tr>
+      <tr><td><code>RECAPTCHA_PUBLIC</code> / <code>RECAPTCHA_PRIVATE</code></td><td><code>capchat_type</code> is <code>recaptcha</code>.</td></tr>
+      <tr><td><code>HCAPTCHA_SITE</code> / <code>HCAPTCHA_SECRET</code></td><td><code>capchat_type</code> is <code>hcaptcha</code>.</td></tr>
+      <tr><td><code>TURNSTILE_SITE</code> / <code>TURNSTILE_SECRET</code></td><td><code>capchat_type</code> is <code>turnstile</code>.</td></tr>
+      <tr><td><code>PORT</code></td><td>Optional, defaults to 3001. This is also the port used for <code>http://localhost:&lt;port&gt;</code> when <code>local</code> is true.</td></tr>
+    </table>
+    <div class="info-box ok">If <code>capchat_type</code> is <code>local</code>, none of the captcha keys above are needed at all — see section 8.</div>
+  </div>
+</div>
+
+<div class="window" id="sanction">
+  <div class="titlebar">6. sanction.json</div>
+  <div class="content">
+    <p>Chooses the action applied automatically when a check fails. Every value must be exactly <code>"Kicked"</code> or <code>"Banned"</code>.</p>
+    <table>
+      <tr><th>Key</th><th>Triggered when</th></tr>
+      <tr><td><code>Alt_Detect</code></td><td>The account looks like an alternate account of an already-verified user.</td></tr>
+      <tr><td><code>Ip_Already_Linked</code></td><td>The IP address is already linked to a different Discord account.</td></tr>
+      <tr><td><code>Vpn_Proxy_Detected</code></td><td>The connection is identified as a VPN, proxy, or hosting IP.</td></tr>
+      <tr><td><code>Bot_Detected</code></td><td>The Discord account itself is a bot account.</td></tr>
+    </table>
+    <p>Note that an unrecognized browser (section 10) does not trigger a sanction by default — it only blocks that attempt.</p>
+  </div>
+</div>
+
+<div class="window" id="database">
+  <div class="titlebar">7. Database files</div>
+  <div class="content">
+    <table>
+      <tr><th>File</th><th>Content</th></tr>
+      <tr><td><code>Database/IP.json</code></td><td>Current mapping of <code>userId → IP address</code> — the single active IP tied to each verified account.</td></tr>
+      <tr><td><code>Database/Attempts.json</code></td><td>Full attempt history, keyed by IP address. Every verification attempt — accepted or refused — is appended here with the account that tried it, the result, the reason, and the timestamp. This is what powers <code>+getinfo</code>.</td></tr>
+    </table>
+    <pre>{
+  "203.0.113.42": [
+    { "userId": "123456789012345678", "result": "Accepted", "reason": "Verified successfully", "timestamp": "2026-07-04T18:02:11.000Z" },
+    { "userId": "998877665544332211", "result": "Refused", "reason": "IP already linked to account: 123456789012345678", "timestamp": "2026-07-04T18:05:44.000Z" }
+  ]
+}</pre>
+    <p>Each IP keeps at most its 200 most recent entries to keep the file bounded in size.</p>
+  </div>
+</div>
+
+<div class="window" id="captcha">
+  <div class="titlebar">8. Captcha system</div>
+  <div class="content">
+    <p>Four captcha modes are supported, selected with <code>capchat_type</code>:</p>
+    <table>
+      <tr><th>Type</th><th>External keys needed</th><th>Notes</th></tr>
+      <tr><td><code>local</code></td><td>None</td><td>Generates a random math question (addition or subtraction, values 1–20) and renders it with each character individually rotated, scaled, and offset using CSS transforms — a distorted look without needing any image or canvas library.</td></tr>
+      <tr><td><code>recaptcha</code></td><td><code>RECAPTCHA_PUBLIC</code> / <code>RECAPTCHA_PRIVATE</code></td><td>Google reCAPTCHA v2 checkbox widget.</td></tr>
+      <tr><td><code>hcaptcha</code></td><td><code>HCAPTCHA_SITE</code> / <code>HCAPTCHA_SECRET</code></td><td>hCaptcha checkbox widget.</td></tr>
+      <tr><td><code>turnstile</code></td><td><code>TURNSTILE_SITE</code> / <code>TURNSTILE_SECRET</code></td><td>Cloudflare Turnstile widget.</td></tr>
+    </table>
+    <p>If a third-party provider's secret key is missing or still set to its placeholder value, the bot fails cleanly with an internal error page and logs the exact reason to the logs webhook — it never sends a broken request to the provider.</p>
+  </div>
+</div>
+
+<div class="window" id="vpn">
+  <div class="titlebar">9. Anti-VPN / Anti-Proxy</div>
+  <div class="content">
+    <p>Every verification attempt has its IP checked against a reputation database, which reports both proxy status and hosting/datacenter status — a connection is flagged if either is true, since most abuse comes from either category.</p>
+    <ul>
+      <li><strong>Configurable timeout</strong> — <code>Vpn_Check_Timeout_Ms</code> controls how long the lookup is allowed to take before giving up.</li>
+      <li><strong>Configurable fail behavior</strong> — <code>Vpn_Check_Fail_Closed</code> decides what happens if the lookup itself fails (network error, provider down, timeout). By default the bot fails open (lets the user through) to avoid blocking everyone during a provider outage; set it to <code>true</code> to fail closed instead (treat lookup failures as a detected proxy), which is stricter and recommended for high-risk servers.</li>
+      <li><strong>Sanctions</strong> — a detected VPN/proxy triggers the <code>Vpn_Proxy_Detected</code> sanction from <code>sanction.json</code> in addition to blocking the attempt.</li>
+      <li><strong>Full audit trail</strong> — every VPN/proxy refusal is recorded in <code>Database/Attempts.json</code> with the reason, so you can review patterns with <code>+getinfo</code>.</li>
+    </ul>
+    <div class="info-box warn">No free IP-reputation source is 100% accurate. Treat this as a strong deterrent, not a perfect filter — combine it with <code>Allow_Ip_Already_Linked</code>, <code>Allow_Alt</code>, and the sanction system for defense in depth.</div>
+  </div>
+</div>
+
+<div class="window" id="browser">
+  <div class="titlebar">10. Browser blocking (BlockingUnknownNavigator)</div>
+  <div class="content">
+    <p>When <code>BlockingUnknownNavigator</code> is set to <code>true</code>, the bot reads the browser's User-Agent header and only allows the verification to proceed if the detected browser is present in <code>Authorised_Navigators</code>. Anything unrecognized — headless browsers, unusual automation tools, custom HTTP clients pretending to be a browser without a matching signature — is blocked before the captcha step is even reached.</p>
+    <p>Recognized browser names you can put in <code>Authorised_Navigators</code>:</p>
+    <table>
+      <tr><th>Name</th><th>Notes</th></tr>
+      <tr><td><code>Chrome</code></td><td>Google Chrome and most Chromium-based browsers without their own distinct signature.</td></tr>
+      <tr><td><code>Firefox</code></td><td>Mozilla Firefox.</td></tr>
+      <tr><td><code>Safari</code></td><td>Apple Safari on macOS and iOS.</td></tr>
+      <tr><td><code>Edge</code></td><td>Microsoft Edge (Chromium-based).</td></tr>
+      <tr><td><code>Opera</code></td><td>Opera desktop and mobile.</td></tr>
+      <tr><td><code>Brave</code></td><td>Brave browser.</td></tr>
+      <tr><td><code>Vivaldi</code></td><td>Vivaldi browser.</td></tr>
+      <tr><td><code>Samsung Internet</code></td><td>Default browser on Samsung Android devices.</td></tr>
+      <tr><td><code>UC Browser</code></td><td>UC Browser, common on mobile in some regions.</td></tr>
+      <tr><td><code>Discord</code></td><td>Discord's own in-app browser, used when a user opens the verification link without leaving the Discord mobile app.</td></tr>
+    </table>
+    <div class="info-box tip">If your members mostly open the verification link from inside Discord's mobile app, make sure <code>Discord</code> stays in the list, or they will be blocked.</div>
+    <div class="info-box ok">A refused attempt due to browser blocking is recorded in <code>Database/Attempts.json</code> with the detected browser name as the reason, and the user receives a DM explaining what happened.</div>
+  </div>
+</div>
+
+<div class="window" id="ratelimit">
+  <div class="titlebar">11. Rate limiting</div>
+  <div class="content">
+    <p>Two independent layers of anti-spam protection:</p>
+    <table>
+      <tr><th>Layer</th><th>Setting</th><th>Behavior</th></tr>
+      <tr><td>Web requests</td><td><code>rate_limit.window_ms</code> / <code>rate_limit.max_requests</code></td><td>Each IP address may make at most <code>max_requests</code> requests to the verification page (GET or POST) within any <code>window_ms</code> window. Once exceeded, further requests receive a "Too Many Attempts" page with HTTP status 429 until the window resets.</td></tr>
+      <tr><td>Discord button</td><td><code>rate_limit.button_cooldown_ms</code></td><td>Each Discord user must wait this many milliseconds between clicks of the Verify button before a new link is generated, preventing DM spam from repeated clicking.</td></tr>
+    </table>
+    <p>Defaults: a 60 second window, 10 requests per window, and a 15 second button cooldown. All three are editable in the <strong>Rate Limiting</strong> section of the web settings panel.</p>
+  </div>
+</div>
+
+<div class="window" id="routes">
+  <div class="titlebar">12. Web routes</div>
+  <div class="content">
+    <table>
+      <tr><th>Route</th><th>Description</th></tr>
+      <tr><td><code>GET /</code></td><td>Landing page explaining the service. No verification action here.</td></tr>
+      <tr><td><code>GET /health</code></td><td>Health check, returns <code>{ "status": "ok" }</code>.</td></tr>
+      <tr><td><code>GET /api/verify/:code</code></td><td>Displays the verification page. Rate limited, rejects expired or invalid links.</td></tr>
+      <tr><td><code>POST /api/verify/:code</code></td><td>Processes the verification submission. Rate limited, runs every security check in sequence, and logs the outcome.</td></tr>
+      <tr><td><code>GET /settings</code></td><td>Web settings panel shell. Requires a valid session token in the URL hash to unlock.</td></tr>
+      <tr><td><code>GET /api/settings/validate</code></td><td>Validates a one-time settings session token generated by <code>+settings</code>.</td></tr>
+      <tr><td><code>POST /api/settings/save</code></td><td>Persists settings changes after validating them.</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="window" id="structure">
+  <div class="titlebar">13. Folder structure</div>
+  <div class="content">
+    <pre>verify-bot/
+├── api/          reserved for future API extensions
+├── Temp/         temporary verification code files
+├── Database/
+│   ├── IP.json        current userId → IP mapping
+│   └── Attempts.json  full accepted/refused attempt history per IP
+├── src/
+│   ├── commands/ all bot commands (sendpanel, verify, docs, settings, getinfo)
+│   ├── events/   Discord event listeners
+│   ├── handlers/ command/event loaders
+│   ├── utils/    settingsStore, validateSettings, permissions, publicUrl,
+│   │             commandNames, browserDetect, rateLimiter, attempts
+│   └── web/      Express web server (verification site + settings panel)
+├── key.env
+├── settings.json
+├── sanction.json
+└── package.json</pre>
+  </div>
+</div>
+
+<div class="window" id="hardening">
+  <div class="titlebar">14. Security hardening notes</div>
+  <div class="content">
+    <h2>Included by default</h2>
+    <ul>
+      <li>Secrets isolation: tokens and keys live only in <code>key.env</code>, which is gitignored.</li>
+      <li>Role-based command access, enforced by <code>admin_role</code> and <code>moderator_role</code>.</li>
+      <li>Verification links expire after <code>verification_code_expiry</code> milliseconds.</li>
+      <li>Each verified IP is tied to a single Discord account, with configurable handling of VPNs, proxies, alternate accounts, blocked countries, and now unrecognized browsers.</li>
+      <li>Full audit trail of every accepted and refused attempt, per IP and per account, in <code>Database/Attempts.json</code>, queryable with <code>+getinfo</code>.</li>
+      <li>Two layers of rate limiting to prevent spam and abuse of the verification endpoint and the Discord button.</li>
+      <li>Outbound calls (captcha verification, IP-reputation lookups) use bounded, configurable timeouts.</li>
+      <li>Strict validation of <code>settings.json</code> on every startup and every save, with defaults automatically applied for anything omitted.</li>
+      <li>Discord interactions are deferred immediately and wrapped in error handling; the process also installs <code>unhandledRejection</code> and <code>uncaughtException</code> handlers.</li>
+      <li>Verification and settings-panel links use your configured domain when reachable and fall back to <code>http://localhost:&lt;port&gt;</code> automatically otherwise, or immediately when <code>local</code> is true.</li>
+    </ul>
+    <h2>You still need to do this yourself</h2>
+    <ul>
+      <li>Rotate any secret that has ever been pasted into a chat, ticket, or shared document.</li>
+      <li>Confirm <code>key.env</code> is never committed (<code>git status</code> should never show it).</li>
+      <li>Serve the site over HTTPS in production (see <code>Installation/Debian.sh</code> for an Nginx + Certbot setup).</li>
+      <li>Restrict your firewall to ports 22/80/443.</li>
+      <li>Run <code>npm audit</code> periodically.</li>
+      <li>Back up the <code>Database/</code> folder regularly — it is the only record of who verified from where.</li>
+      <li>Grant the bot only the Discord permissions it actually needs — never Administrator.</li>
+    </ul>
+    <h2>Known limitations</h2>
+    <ul>
+      <li>Free IP-reputation lookups are rate-limited and not guaranteed to be fully accurate.</li>
+      <li>Browser detection is based on the User-Agent header, which a determined attacker can forge; treat <code>BlockingUnknownNavigator</code> as one layer among several, not a silver bullet.</li>
+      <li>Rate limiting is in-memory and per-process; it resets if the bot restarts and does not share state across multiple server instances.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="window" id="setup">
+  <div class="titlebar">15. Step-by-step setup</div>
+  <div class="content">
+    <h2>Requirements</h2>
+    <ul>
+      <li>Node.js v18 or higher, npm v9 or higher</li>
+      <li>A Discord bot token</li>
+      <li>A domain pointed at your server (optional if you plan to use <code>local: true</code>)</li>
+      <li>A reverse proxy such as Nginx or Caddy for HTTPS (recommended for production)</li>
+    </ul>
+
+    <h2>Step 1 — Install Node.js</h2>
+    <pre>curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y nodejs</pre>
+    <p>On Windows, download the installer from nodejs.org. Verify with <code>node -v</code> and <code>npm -v</code>.</p>
+
+    <h2>Step 2 — Install dependencies</h2>
+    <pre>npm install</pre>
+
+    <h2>Step 3 — Configure key.env</h2>
+    <p>Copy <code>key.env.example</code> to <code>key.env</code> and fill in your bot token and, if needed, your captcha provider keys. See section 5.</p>
+
+    <h2>Step 4 — Configure settings.json</h2>
+    <p>Set your role IDs, captcha type, domain (or <code>local: true</code> for local testing), security policies, and webhooks. See sections 2 to 4. The file is validated automatically — the bot refuses to start and prints the exact problem if something is missing or the wrong type.</p>
+
+    <h2>Step 5 — Configure sanction.json</h2>
+    <p>See section 6.</p>
+
+    <h2>Step 6 — Discord bot permissions</h2>
+    <p>In the Developer Portal, enable the Server Members Intent and Message Content Intent. In your server, the bot needs Manage Roles, Kick Members, Ban Members, Send Messages, and Read Messages.</p>
+
+    <h2>Step 7 — Start the bot</h2>
+    <pre>npm start</pre>
+    <p>The web server starts on the configured port (default 3001); the bot connects to Discord automatically.</p>
+
+    <h2>Step 8 — Reverse proxy (recommended for production)</h2>
+    <pre>server {
+    listen 80;
+    server_name your.domain.here;
+
+    location / {
+        proxy_pass http://127.0.0.1:3001;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $remote_addr;
+    }
+}</pre>
+    <pre>sudo apt install certbot python3-certbot-nginx
+sudo certbot --nginx -d your.domain.here</pre>
+
+    <h2>Step 9 — Send the verification panel</h2>
+    <pre>+sendpanel</pre>
+    <p>This posts the verification embed with the Verify button in the current channel.</p>
+  </div>
+</div>
+
+<div class="window" id="faq">
+  <div class="titlebar">16. Troubleshooting</div>
+  <div class="content">
+    <h3>"The keys are invalid" error on the verification page</h3>
+    <p>This means <code>capchat_type</code> is set to a third-party provider (<code>recaptcha</code>, <code>hcaptcha</code>, or <code>turnstile</code>) but the matching secret in <code>key.env</code> is missing or still a placeholder. Either fill in the real keys, or switch <code>capchat_type</code> to <code>local</code>, which needs no keys at all.</p>
+
+    <h3>Links point to the wrong address</h3>
+    <p>Check <code>local</code> in <code>settings.json</code>. If it is <code>true</code>, every link always uses <code>http://localhost:&lt;port&gt;</code> regardless of <code>public_domain</code>. Set it to <code>false</code> and fill in <code>public_domain</code> to use your real domain.</p>
+
+    <h3>A legitimate user got blocked as an unknown browser</h3>
+    <p>Add their browser name to <code>Authorised_Navigators</code>, or set <code>BlockingUnknownNavigator</code> to <code>false</code> if this happens often. Discord's mobile in-app browser needs <code>Discord</code> in the list.</p>
+
+    <h3>Too many "Too Many Attempts" errors from legitimate users</h3>
+    <p>Increase <code>rate_limit.max_requests</code> or <code>rate_limit.window_ms</code> in the settings panel. This usually happens on servers sharing a single outbound IP (school, office, campus Wi-Fi).</p>
+
+    <h3>How do I see who tried to verify from a given IP?</h3>
+    <p>Run <code>+getinfo &lt;ip&gt;</code>. It lists every account that has ever attempted verification from that address, with an Accepted/Refused status and the exact reason for each attempt.</p>
+  </div>
+</div>
+
+<div class="footer">Verification Bot &mdash; Full Configuration Guide</div>
+
+</body>
+</html>

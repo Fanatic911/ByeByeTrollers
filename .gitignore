@@ -1,0 +1,26 @@
+# Secrets
+key.env
+.env
+.env.local
+.env.production
+
+# Dependencies
+node_modules/
+package-lock.json
+npm-debug.log*
+
+# Database
+Database/*.json
+Temp/*
+
+# Logs
+Logs/*
+*.log
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
